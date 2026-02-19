@@ -1,0 +1,12 @@
+{
+  "name": "dinner-for-5",
+  "version": "1.0.0",
+  "description": "Family recipe app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
