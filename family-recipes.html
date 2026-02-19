@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Family Recipe Box</title>
+
+<!-- Favicon: plate & fork SVG -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%236b4226'/%3E%3Ccircle cx='32' cy='34' r='18' fill='%23e8d5c0'/%3E%3Ccircle cx='32' cy='34' r='13' fill='%23faf6ef'/%3E%3Crect x='30' y='10' width='4' height='22' rx='2' fill='%23c05c2e'/%3E%3Crect x='22' y='10' width='3' height='14' rx='1.5' fill='%23c8963c'/%3E%3Crect x='22' y='22' width='3' height='12' rx='1.5' fill='%23c8963c'/%3E%3C/svg%3E">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ef;
+    --warm-white: #fffdf8;
+    --brown: #6b4226;
+    --rust: #c05c2e;
+    --sage: #7a9e7e;
+    --mustard: #d4a017;
+    --light-brown: #e8d5c0;
+    --dark: #2c1a0e;
+    --shadow: rgba(107,66,38,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    font-family: 'Lato', sans-serif;
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--brown);
+    padding: 2.5rem 1rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 40px);
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--cream);
+    letter-spacing: 1px;
+    position: relative;
+  }
+  header p {
+    color: var(--light-brown);
+    font-size: 1rem;
+    margin-top: 0.4rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .header-icons { font-size: 1.8rem; margin-bottom: 0.5rem; position: relative; }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* ── ADD RECIPE SECTION ── */
+  .add-bar-wrapper {
+    margin-bottom: 2.5rem;
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px var(--shadow);
+  }
+
+  /* SVG food-illustration background */
+  .add-bar-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  /* Readable overlay */
+  .add-bar-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+      rgba(255,250,240,0.93) 0%,
+      rgba(255,248,232,0.89) 55%,
+      rgba(255,242,215,0.84) 100%);
+    z-index: 1;
+  }
+
+  .add-bar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 0.75rem;
+    padding: 1.5rem 1.5rem 1.3rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    border: 2.5px solid #dfc49a;
+    border-radius: 18px;
+  }
+
+  .add-bar-title {
+    width: 100%;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--brown);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+  .add-bar-title span { font-size: 1.3rem; }
+
+  .add-bar input, .add-bar select, .add-bar textarea {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+    border: 1.5px solid #d0b896;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255,253,248,0.88);
+    color: var(--dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .add-bar input:focus, .add-bar select:focus, .add-bar textarea:focus {
+    outline: none;
+    border-color: var(--rust);
+    box-shadow: 0 0 0 3px rgba(192,92,46,0.13);
+    background: rgba(255,253,248,1);
+  }
+  .add-bar .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+    min-width: 140px;
+  }
+  .add-bar label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--brown);
+    font-weight: 700;
+  }
+  .add-bar textarea { resize: vertical; min-height: 64px; width: 100%; line-height: 1.5; }
+  .btn-add {
+    background: var(--rust);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.65rem 1.3rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    white-space: nowrap;
+    align-self: flex-end;
+    box-shadow: 0 3px 10px rgba(192,92,46,0.3);
+  }
+  .btn-add:hover { background: var(--brown); transform: translateY(-1px); box-shadow: 0 5px 14px rgba(107,66,38,0.35); }
+  .btn-add:active { transform: translateY(0); }
+
+  /* ── CATEGORIES ── */
+  .category {
+    margin-bottom: 1.5rem;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+  .cat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    transition: filter 0.15s;
+  }
+  .cat-header:hover { filter: brightness(0.95); }
+  .cat-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .cat-icon { font-size: 1.5rem; }
+  .cat-count { font-size: 0.8rem; font-weight: 700; opacity: 0.7; font-family: 'Lato', sans-serif; letter-spacing: 1px; }
+  .cat-chevron { font-size: 1.2rem; transition: transform 0.3s ease; }
+  .category.open .cat-chevron { transform: rotate(180deg); }
+
+  .cat-quick     > .cat-header { background: #fff3e0; color: #8b4513; }
+  .cat-mexican   > .cat-header { background: #fce4ec; color: #880e4f; }
+  .cat-casserole > .cat-header { background: #e8f5e9; color: #1b5e20; }
+  .cat-pasta     > .cat-header { background: #e3f2fd; color: #0d47a1; }
+  .cat-grilling  > .cat-header { background: #fbe9e7; color: #bf360c; }
+  .cat-griddle   > .cat-header { background: #1a1a1a; color: #f5c842; }
+  .cat-soups     > .cat-header { background: #f3e5f5; color: #4a148c; }
+  .cat-breakfast > .cat-header { background: #fff8e1; color: #f57f17; }
+  .cat-custom    > .cat-header { background: #e0f2f1; color: #004d40; }
+
+  .cat-body {
+    display: none;
+    background: var(--warm-white);
+    border: 2px solid var(--light-brown);
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    padding: 0.5rem;
+  }
+  .category.open .cat-body { display: block; }
+
+  /* Griddle dark theme */
+  .cat-griddle .cat-body { background: #111; border-color: #333; }
+  .cat-griddle .recipe-header { background: #1e1e1e; }
+  .cat-griddle .recipe-item.open .recipe-header { background: #2c2c2c; }
+  .cat-griddle .recipe-header:hover { background: #2a2a2a; }
+  .cat-griddle .recipe-name { color: #f5c842; }
+  .cat-griddle .recipe-meta { color: #999; }
+  .cat-griddle .recipe-body { background: #181818; }
+  .cat-griddle .recipe-section-title { color: #f5c842; }
+  .cat-griddle .ingredients-list li { background: #242424; border-left-color: #f5c842; color: #ddd; }
+  .cat-griddle .instructions-list li { color: #ccc; }
+  .cat-griddle .instructions-list li::before { background: #c05c2e; }
+  .cat-griddle .recipe-item { border-color: transparent; }
+  .cat-griddle .recipe-item.open { border-color: #3a3a3a; }
+  .cat-griddle .recipe-chevron { color: #f5c842; }
+  .cat-griddle .servings-badge { background: #c05c2e; }
+  .cat-griddle .empty-cat { color: #555; }
+  .cat-griddle .btn-delete { filter: brightness(1.5); }
+
+  /* ── RECIPE ITEMS ── */
+  .recipe-item {
+    border-radius: 10px;
+    margin-bottom: 0.4rem;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .recipe-item:last-child { margin-bottom: 0; }
+  .recipe-item.open { border-color: var(--light-brown); }
+  .recipe-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    background: var(--cream);
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .recipe-item.open .recipe-header { background: var(--light-brown); border-radius: 8px 8px 0 0; }
+  .recipe-header:hover { background: var(--light-brown); }
+  .recipe-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; }
+  .recipe-meta { font-size: 0.75rem; color: #888; margin-top: 0.1rem; }
+  .recipe-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+  .recipe-chevron { font-size: 1rem; color: var(--brown); transition: transform 0.25s; }
+  .recipe-item.open .recipe-chevron { transform: rotate(180deg); }
+  .btn-delete { background: none; border: none; cursor: pointer; font-size: 1rem; opacity: 0.4; transition: opacity 0.2s; padding: 0.2rem; line-height: 1; }
+  .btn-delete:hover { opacity: 1; }
+  .recipe-body { display: none; padding: 1.25rem 1rem; background: var(--warm-white); border-radius: 0 0 8px 8px; }
+  .recipe-item.open .recipe-body { display: block; }
+
+  .recipe-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--rust);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+  }
+  .recipe-section-title:first-child { margin-top: 0; }
+
+  .ingredients-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.3rem; }
+  .ingredients-list li { font-size: 0.9rem; padding: 0.3rem 0.5rem; background: var(--cream); border-radius: 6px; border-left: 3px solid var(--mustard); }
+
+  .instructions-list { counter-reset: step; list-style: none; padding: 0; }
+  .instructions-list li { counter-increment: step; display: flex; gap: 0.75rem; font-size: 0.9rem; line-height: 1.55; margin-bottom: 0.6rem; }
+  .instructions-list li::before {
+    content: counter(step);
+    background: var(--rust);
+    color: white;
+    border-radius: 50%;
+    min-width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  .servings-badge { display: inline-block; background: var(--sage); color: white; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 20px; margin-left: 0.5rem; vertical-align: middle; }
+  .empty-cat { text-align: center; padding: 1.5rem; color: #aaa; font-style: italic; font-size: 0.9rem; }
+
+  /* ── TOAST ── */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--brown); color: var(--cream); padding: 0.8rem 1.4rem; border-radius: 10px; font-size: 0.9rem; font-weight: 700; opacity: 0; transform: translateY(20px); transition: all 0.3s; pointer-events: none; z-index: 9999; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 600px) {
+    .add-bar { flex-direction: column; }
+    .ingredients-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-icons">🍽️</div>
+  <h1>Our Family Recipe Box</h1>
+  <p>Feeding five, one delicious meal at a time</p>
+</header>
+
+<main>
+
+  <!-- ══════ ADD RECIPE BOX with illustrated food background ══════ -->
+  <div class="add-bar-wrapper">
+
+    <!-- Food illustration SVG background -->
+    <svg class="add-bar-bg" viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <!-- Warm parchment -->
+      <rect width="900" height="280" fill="#fff8ec"/>
+
+      <!-- Soft ambient blobs -->
+      <ellipse cx="100" cy="50"  rx="110" ry="80"  fill="#f5d9b0" opacity="0.35"/>
+      <ellipse cx="800" cy="240" rx="130" ry="90"  fill="#fce0c0" opacity="0.3"/>
+      <ellipse cx="460" cy="140" rx="160" ry="120" fill="#fef0d8" opacity="0.25"/>
+      <ellipse cx="700" cy="60"  rx="90"  ry="70"  fill="#f8e0c8" opacity="0.3"/>
+
+      <!-- ── LARGE TOMATO left ── -->
+      <g transform="translate(58,130)">
+        <ellipse cx="0" cy="9" rx="38" ry="7" fill="rgba(0,0,0,0.06)"/>
+        <circle cx="0" cy="0" r="36" fill="#d93228"/>
+        <circle cx="0" cy="0" r="32" fill="#e84535"/>
+        <path d="M-32,0 Q-20,-28 0,-32 Q20,-28 32,0" fill="#c82820" opacity="0.3"/>
+        <ellipse cx="-11" cy="-12" rx="10" ry="7" fill="rgba(255,255,255,0.22)" transform="rotate(-20,-11,-12)"/>
+        <line x1="0" y1="-36" x2="0" y2="36"  stroke="rgba(0,0,0,0.07)" stroke-width="1.5"/>
+        <line x1="-36" y1="0" x2="36" y2="0"  stroke="rgba(0,0,0,0.07)" stroke-width="1.5"/>
+        <line x1="-25" y1="-25" x2="25" y2="25" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+        <line x1="25" y1="-25" x2="-25" y2="25" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+        <!-- stem + leaves -->
+        <path d="M0,-36 Q4,-48 0,-56" stroke="#4a7c39" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <path d="M0,-40 Q-10,-46 -12,-38" stroke="#4a7c39" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M0,-40 Q10,-46 12,-38"  stroke="#4a7c39" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M0,-44 Q-6,-50 -8,-46"  stroke="#5a9048" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M0,-44 Q6,-50 8,-46"   stroke="#5a9048" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- ── GARLIC small, near tomato ── -->
+      <g transform="translate(118,195) scale(0.9)">
+        <ellipse cx="0" cy="4" rx="20" ry="4" fill="rgba(0,0,0,0.05)"/>
+        <ellipse cx="0" cy="0" rx="18" ry="20" fill="#f2eddc"/>
+        <ellipse cx="-6" cy="-2" rx="6" ry="11" fill="#e8e2cc"/>
+        <ellipse cx="6"  cy="-2" rx="6" ry="11" fill="#ece6d4"/>
+        <ellipse cx="0"  cy="-5" rx="5" ry="9"  fill="#f0eadc"/>
+        <path d="M-6,-11 Q-6,2 -6,11"  stroke="rgba(0,0,0,0.09)" stroke-width="1" fill="none"/>
+        <path d="M6,-11 Q6,2 6,11"     stroke="rgba(0,0,0,0.09)" stroke-width="1" fill="none"/>
+        <path d="M0,-20 Q2,-30 0,-36" stroke="#c0b060" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M0,-24 Q-5,-27 -6,-22" stroke="#c0b060" stroke-width="1.5" fill="none"/>
+      </g>
+
+      <!-- ── WOODEN SPOON top-right ── -->
+      <g transform="translate(826,28) rotate(32)">
+        <rect x="-5.5" y="0" width="11" height="118" rx="5.5" fill="#bf8c30"/>
+        <!-- grain -->
+        <line x1="-2" y1="12" x2="-2" y2="100" stroke="rgba(0,0,0,0.09)" stroke-width="1"/>
+        <line x1="2"  y1="18" x2="2"  y2="105" stroke="rgba(0,0,0,0.06)" stroke-width="0.8"/>
+        <!-- bowl -->
+        <ellipse cx="0" cy="137" rx="20" ry="24" fill="#bf8c30"/>
+        <ellipse cx="0" cy="137" rx="13" ry="17" fill="#c89840" opacity="0.45"/>
+        <!-- shine on bowl -->
+        <ellipse cx="-5" cy="128" rx="5" ry="4" fill="rgba(255,255,255,0.18)" transform="rotate(-10,-5,128)"/>
+      </g>
+
+      <!-- ── CHEF KNIFE ── -->
+      <g transform="translate(748,230) rotate(-22)">
+        <polygon points="0,-2 6,-2 88,-10 88,-4" fill="#b8c0cc"/>
+        <polygon points="0,-2 6,-2 88,-4 88,2"  fill="#9ea6b4"/>
+        <line x1="10" y1="-6" x2="82" y2="-8" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <rect x="-44" y="-5" width="46" height="11" rx="4.5" fill="#4a2e14"/>
+        <circle cx="-34" cy="0.5" r="2.8" fill="#7a5030"/>
+        <circle cx="-22" cy="0.5" r="2.8" fill="#7a5030"/>
+        <circle cx="-10" cy="0.5" r="2.8" fill="#7a5030"/>
+      </g>
+
+      <!-- ── YELLOW BELL PEPPER right ── -->
+      <g transform="translate(854,115)">
+        <ellipse cx="0" cy="10" rx="30" ry="6" fill="rgba(0,0,0,0.06)"/>
+        <path d="M0,-30 Q24,-22 22,10 Q20,32 0,32 Q-20,32 -22,10 Q-24,-22 0,-30 Z" fill="#e0a018"/>
+        <path d="M0,-30 Q12,-14 10,10 Q8,32 0,32" fill="#f0b828" opacity="0.45"/>
+        <ellipse cx="-7" cy="-14" rx="6" ry="8" fill="rgba(255,255,255,0.22)" transform="rotate(-15,-7,-14)"/>
+        <path d="M-13,-22 Q-24,-10 -22,10" stroke="#c09010" stroke-width="1.5" fill="none" opacity="0.35"/>
+        <path d="M13,-22 Q24,-10 22,10"  stroke="#c09010" stroke-width="1.5" fill="none" opacity="0.35"/>
+        <path d="M0,-30 Q2,-42 0,-50" stroke="#4a8030" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <path d="M0,-34 Q-8,-40 -10,-34" stroke="#4a8030" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M0,-34 Q8,-40 10,-34"  stroke="#4a8030" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- ── FORK left-center ── -->
+      <g transform="translate(172,22) rotate(12)">
+        <rect x="-4.5" y="58" width="9" height="98" rx="4.5" fill="#8a5c24"/>
+        <rect x="-12" y="0" width="3.5" height="52" rx="1.7" fill="#b8c4d0"/>
+        <rect x="-5"  y="0" width="3.5" height="52" rx="1.7" fill="#c0ccd8"/>
+        <rect x="2"   y="0" width="3.5" height="52" rx="1.7" fill="#b8c4d0"/>
+        <rect x="9"   y="0" width="3.5" height="52" rx="1.7" fill="#c0ccd8"/>
+        <rect x="-13" y="45" width="26" height="6" rx="3" fill="#a8b4c0"/>
+        <rect x="-5"  y="50" width="10" height="14" rx="4" fill="#b0bcc8"/>
+      </g>
+
+      <!-- ── LEMON center-bottom ── -->
+      <g transform="translate(450,240)">
+        <ellipse cx="0" cy="8" rx="32" ry="6" fill="rgba(0,0,0,0.05)"/>
+        <ellipse cx="0" cy="0" rx="30" ry="24" fill="#f0c818"/>
+        <ellipse cx="0" cy="0" rx="25" ry="19" fill="#f8d830" opacity="0.55"/>
+        <ellipse cx="-9" cy="-8" rx="8" ry="6" fill="rgba(255,255,255,0.22)" transform="rotate(-20,-9,-8)"/>
+        <ellipse cx="28" cy="0" rx="5" ry="4" fill="#d8b010"/>
+        <ellipse cx="-28" cy="0" rx="5" ry="4" fill="#d8b010"/>
+      </g>
+
+      <!-- ── FRESH BASIL sprig ── -->
+      <g transform="translate(678,42) rotate(-8)" opacity="0.88">
+        <path d="M0,44 Q1,10 0,-32" stroke="#4a7c30" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <!-- leaves pairs -->
+        <path d="M0,8 Q-18,-8 -16,-22"  stroke="#4a7c30" stroke-width="1.6" fill="none"/>
+        <ellipse cx="-16" cy="-22" rx="14" ry="9" fill="#62a040" transform="rotate(-28,-16,-22)"/>
+        <path d="M0,8 Q18,-8 16,-22"    stroke="#4a7c30" stroke-width="1.6" fill="none"/>
+        <ellipse cx="16"  cy="-22" rx="14" ry="9" fill="#6aac48" transform="rotate(28,16,-22)"/>
+        <path d="M0,-6 Q-14,-22 -12,-36" stroke="#4a7c30" stroke-width="1.6" fill="none"/>
+        <ellipse cx="-12" cy="-36" rx="12" ry="8" fill="#62a040" transform="rotate(-18,-12,-36)"/>
+        <path d="M0,-6 Q14,-22 12,-36"   stroke="#4a7c30" stroke-width="1.6" fill="none"/>
+        <ellipse cx="12"  cy="-36" rx="12" ry="8" fill="#70b450" transform="rotate(18,12,-36)"/>
+        <ellipse cx="0"   cy="-42" rx="10" ry="7" fill="#68a844"/>
+      </g>
+
+      <!-- ── RED CHILI PEPPER ── -->
+      <g transform="translate(558,210) rotate(-18)">
+        <path d="M0,2 Q10,-12 7,-34 Q4,-56 0,-62"  stroke="#b82818" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <path d="M0,2 Q10,-12 7,-34 Q4,-56 0,-62"  stroke="#dc3828" stroke-width="11" fill="none" stroke-linecap="round"/>
+        <path d="M2,-4 Q10,-18 7,-38"               stroke="rgba(255,110,90,0.4)" stroke-width="4"  fill="none" stroke-linecap="round"/>
+        <path d="M0,-62 Q3,-74 1,-78"               stroke="#4a8028" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        <path d="M0,-62 Q-11,-65 -13,-58"           stroke="#4a8028" stroke-width="2"   fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- ── PURPLE ONION ── -->
+      <g transform="translate(300,34) scale(0.82)" opacity="0.88">
+        <ellipse cx="0" cy="6" rx="28" ry="5" fill="rgba(0,0,0,0.05)"/>
+        <ellipse cx="0" cy="0" rx="26" ry="30" fill="#b890cc"/>
+        <ellipse cx="0" cy="0" rx="20" ry="24" fill="#c8a0dc" opacity="0.45"/>
+        <path d="M0,-30 Q14,0 0,30"  stroke="rgba(255,255,255,0.22)" stroke-width="2.2" fill="none"/>
+        <path d="M0,-30 Q-14,0 0,30" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" fill="none"/>
+        <ellipse cx="-9" cy="-10" rx="8" ry="11" fill="rgba(255,255,255,0.18)" transform="rotate(-10,-9,-10)"/>
+        <!-- roots -->
+        <path d="M-8,30 Q-10,40 -12,44" stroke="#c0a0a0" stroke-width="1.5" fill="none"/>
+        <path d="M0,30  Q0,41 0,46"     stroke="#c0a0a0" stroke-width="1.5" fill="none"/>
+        <path d="M8,30  Q10,40 12,44"   stroke="#c0a0a0" stroke-width="1.5" fill="none"/>
+        <!-- sprout -->
+        <path d="M0,-30 Q2,-44 0,-52" stroke="#72b038" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- ── SPATULA (nod to the Blackstone) ── -->
+      <g transform="translate(380,22) rotate(-15)" opacity="0.75">
+        <!-- handle -->
+        <rect x="-4" y="60" width="8" height="90" rx="4" fill="#5a3018"/>
+        <!-- neck -->
+        <rect x="-3" y="42" width="6" height="22" rx="3" fill="#909090"/>
+        <!-- blade -->
+        <rect x="-16" y="0" width="32" height="44" rx="4" fill="#b0b8c0"/>
+        <!-- slots in blade -->
+        <rect x="-11" y="6"  width="5" height="30" rx="2.5" fill="rgba(0,0,0,0.18)"/>
+        <rect x="-2"  y="6"  width="5" height="30" rx="2.5" fill="rgba(0,0,0,0.18)"/>
+        <rect x="7"   y="6"  width="5" height="30" rx="2.5" fill="rgba(0,0,0,0.18)"/>
+        <!-- shine -->
+        <rect x="-14" y="2"  width="3" height="40" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+      </g>
+
+      <!-- ── SCATTERED SEASONING DOTS ── -->
+      <g fill="#c89030" opacity="0.2">
+        <circle cx="340" cy="200" r="3.5"/>
+        <circle cx="378" cy="72"  r="2.5"/>
+        <circle cx="515" cy="55"  r="3"/>
+        <circle cx="608" cy="160" r="2.5"/>
+        <circle cx="258" cy="155" r="2"/>
+        <circle cx="702" cy="185" r="3"/>
+        <circle cx="148" cy="215" r="2.5"/>
+        <circle cx="482" cy="175" r="2"/>
+        <circle cx="210" cy="80"  r="2"/>
+        <circle cx="640" cy="110" r="3"/>
+      </g>
+
+      <!-- Dashed decorative border -->
+      <rect x="10" y="10" width="880" height="260" rx="12" fill="none" stroke="#c89030" stroke-width="1.5" stroke-dasharray="10,8" opacity="0.3"/>
+    </svg>
+
+    <!-- Gradient overlay for readability -->
+    <div class="add-bar-overlay"></div>
+
+    <!-- Form content -->
+    <div class="add-bar">
+      <div class="add-bar-title"><span>📝</span> Add a New Recipe to the Box</div>
+
+      <div class="field-group">
+        <label>Recipe Name</label>
+        <input type="text" id="new-name" placeholder="e.g. Sheet Pan Chicken"/>
+      </div>
+
+      <div class="field-group" style="flex:0;min-width:170px">
+        <label>Category</label>
+        <select id="new-cat">
+          <option value="quick">⚡ Super Quick</option>
+          <option value="mexican">🌮 Mexican</option>
+          <option value="casserole">🥘 Casseroles</option>
+          <option value="pasta">🍝 Pasta</option>
+          <option value="grilling">🔥 Grilling</option>
+          <option value="griddle">🫕 Blackstone Griddle</option>
+          <option value="soups">🍲 Soups & Stews</option>
+          <option value="breakfast">🥞 Breakfast for Dinner</option>
+          <option value="custom">⭐ Family Favorites</option>
+        </select>
+      </div>
+
+      <div class="field-group" style="flex:2;min-width:200px">
+        <label>Ingredients (one per line)</label>
+        <textarea id="new-ingredients" placeholder="2 lbs chicken thighs&#10;1 can black beans&#10;..."></textarea>
+      </div>
+
+      <div class="field-group" style="flex:2;min-width:200px">
+        <label>Instructions (one per line)</label>
+        <textarea id="new-instructions" placeholder="Preheat oven to 400°F&#10;Season chicken..."></textarea>
+      </div>
+
+      <button class="btn-add" onclick="addRecipe()">+ Add Recipe</button>
+    </div>
+  </div>
+
+  <!-- Category sections rendered here -->
+  <div id="categories"></div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CATEGORIES = [
+  { id:'quick',     label:'Super Quick',          icon:'⚡', cls:'cat-quick' },
+  { id:'mexican',   label:'Mexican Night',         icon:'🌮', cls:'cat-mexican' },
+  { id:'casserole', label:'Casseroles',             icon:'🥘', cls:'cat-casserole' },
+  { id:'pasta',     label:'Pasta',                 icon:'🍝', cls:'cat-pasta' },
+  { id:'grilling',  label:'Grilling',              icon:'🔥', cls:'cat-grilling' },
+  { id:'griddle',   label:'Blackstone Griddle',    icon:'🫕', cls:'cat-griddle' },
+  { id:'soups',     label:'Soups & Stews',         icon:'🍲', cls:'cat-soups' },
+  { id:'breakfast', label:'Breakfast for Dinner',  icon:'🥞', cls:'cat-breakfast' },
+  { id:'custom',    label:'Family Favorites',       icon:'⭐', cls:'cat-custom' },
+];
+
+function uid(){ return Math.random().toString(36).substr(2,9); }
+
+const DEFAULT_RECIPES = [
+  // SUPER QUICK
+  {id:uid(),cat:'quick',name:'Sheet Pan Chicken & Veggies',time:'30 min',
+   ingredients:['2.5 lbs chicken thighs','2 bell peppers, sliced','1 zucchini, sliced','1 red onion, sliced','3 tbsp olive oil','2 tsp garlic powder','1 tsp paprika','1 tsp Italian seasoning','Salt & pepper'],
+   instructions:['Preheat oven to 425°F.','Toss all veggies and chicken with olive oil and seasonings on a large sheet pan.','Spread in a single layer.','Roast 25–30 min until chicken reaches 165°F, flipping veggies halfway.','Serve with rice or crusty bread.']},
+  {id:uid(),cat:'quick',name:'Beef & Broccoli Stir-Fry',time:'25 min',
+   ingredients:['1.5 lbs flank steak, sliced thin','4 cups broccoli florets','3 cloves garlic, minced','3 tbsp soy sauce','2 tbsp oyster sauce','1 tbsp sesame oil','1 tbsp cornstarch','2 tbsp vegetable oil','Cooked rice for serving'],
+   instructions:['Toss steak with cornstarch.','Heat oil in wok over high heat; sear beef 2 min per side, remove.','Add broccoli and garlic; stir-fry 3 min.','Return beef; add soy sauce, oyster sauce, sesame oil.','Toss to coat and serve over rice.']},
+  {id:uid(),cat:'quick',name:'Honey Garlic Salmon',time:'20 min',
+   ingredients:['5 salmon fillets (6 oz each)','3 tbsp honey','3 tbsp soy sauce','4 cloves garlic, minced','1 tbsp olive oil','Lemon wedges','Fresh parsley'],
+   instructions:['Mix honey, soy sauce, and garlic for glaze.','Season salmon with salt and pepper.','Heat oil in oven-safe skillet; sear salmon 3 min per side.','Pour glaze over; transfer to 400°F oven for 6 min.','Garnish with parsley and lemon.']},
+
+  // MEXICAN
+  {id:uid(),cat:'mexican',name:'Family Taco Night',time:'35 min',
+   ingredients:['2 lbs ground beef or turkey','2 packets taco seasoning','1/2 cup water','10 taco shells + flour tortillas','2 cups shredded cheese','2 cups shredded lettuce','2 tomatoes, diced','1 can black beans','Sour cream, salsa, guacamole'],
+   instructions:['Brown meat in large skillet; drain fat.','Add taco seasoning and water; simmer 5 min.','Warm black beans in small pot.','Set up a taco bar with all toppings.','Let everyone build their own tacos!']},
+  {id:uid(),cat:'mexican',name:'Green Chile Enchiladas',time:'50 min',
+   ingredients:['2 lbs chicken breast, cooked & shredded','2 cans green enchilada sauce','12 corn tortillas','3 cups shredded Monterey Jack','1 can green chiles','1 cup sour cream','1 tsp cumin'],
+   instructions:['Preheat oven to 375°F. Mix chicken with green chiles, cumin, 1 cup cheese, and half the sour cream.','Warm tortillas to soften.','Fill each tortilla; roll seam-down into baking dish.','Pour enchilada sauce over; sprinkle remaining cheese.','Bake 25–30 min until bubbly. Top with remaining sour cream.']},
+  {id:uid(),cat:'mexican',name:'Chicken Burrito Bowls',time:'40 min',
+   ingredients:['2 lbs chicken breast','2 cups white rice','2 cans black beans','2 cups corn (frozen or canned)','1 jar salsa','2 tbsp olive oil','1 lime, juiced','2 tsp cumin','2 tsp chili powder','Toppings: cheese, sour cream, avocado, cilantro'],
+   instructions:['Season chicken with cumin, chili powder, salt, oil, and lime juice.','Grill or bake chicken at 400°F for 20–25 min; slice.','Cook rice per package directions.','Warm beans and corn.','Assemble bowls: rice, beans, corn, chicken, toppings.']},
+
+  // CASSEROLES
+  {id:uid(),cat:'casserole',name:'Classic Tater Tot Casserole',time:'55 min',
+   ingredients:['2 lbs ground beef','1 can cream of mushroom soup','1 can cream of chicken soup','1 cup sour cream','2 cups shredded cheddar','1 bag (32 oz) frozen tater tots','1 onion, diced','Salt, pepper, garlic powder'],
+   instructions:['Preheat oven to 375°F.','Brown beef with onion; drain fat. Season.','Mix in soups, sour cream, and 1 cup cheese.','Spread into greased 9x13 dish.','Top with tater tots, then remaining cheese.','Bake 40–45 min until golden and crispy.']},
+  {id:uid(),cat:'casserole',name:'Chicken & Rice Casserole',time:'1 hr 10 min',
+   ingredients:['2 lbs chicken thighs (bone-in)','2 cups long-grain white rice (uncooked)','2 cans cream of chicken soup','2 cups chicken broth','1 cup milk','1 packet onion soup mix','2 cups frozen peas','1 tsp garlic powder'],
+   instructions:['Preheat oven to 350°F. Grease deep 9x13 baking dish.','Mix soups, broth, milk, garlic powder, rice, and peas.','Pour into dish. Place chicken on top; sprinkle with onion soup mix.','Cover tightly with foil.','Bake 1 hour. Uncover; bake 10 min more.','Let rest 5 min before serving.']},
+  {id:uid(),cat:'casserole',name:'Cheesy Baked Ziti',time:'55 min',
+   ingredients:['1 lb ziti pasta','2 lbs Italian sausage','1 jar (24 oz) marinara sauce','15 oz ricotta cheese','3 cups shredded mozzarella','1/2 cup Parmesan, grated','2 eggs','1 tsp Italian seasoning'],
+   instructions:['Preheat oven to 375°F. Cook pasta al dente; drain.','Brown sausage; drain fat. Mix with marinara.','Combine ricotta, eggs, seasoning, and 1 cup mozzarella.','Layer pasta, meat sauce, ricotta mixture, remaining pasta, remaining sauce, then cheeses.','Cover with foil; bake 30 min. Uncover; bake 15 min until bubbly and golden.']},
+
+  // PASTA
+  {id:uid(),cat:'pasta',name:'One-Pot Spaghetti Bolognese',time:'45 min',
+   ingredients:['1.5 lbs ground beef','1 lb spaghetti','1 onion, diced','4 cloves garlic, minced','2 cans (14 oz each) crushed tomatoes','2 tbsp tomato paste','1 tsp each: oregano, basil, sugar','2 cups beef broth','Parmesan for serving'],
+   instructions:['Brown beef with onion; add garlic; cook 1 min.','Add tomato paste; cook 2 min.','Add tomatoes, broth, and seasonings; bring to boil.','Break spaghetti in half; nestle into sauce.','Cover; simmer 12–15 min, stirring occasionally.','Serve topped with Parmesan.']},
+  {id:uid(),cat:'pasta',name:'Creamy Chicken Alfredo',time:'35 min',
+   ingredients:['1.5 lbs chicken breast, sliced','1 lb fettuccine','2 cups heavy cream','1 cup Parmesan, grated','4 cloves garlic, minced','4 tbsp butter','1 tsp Italian seasoning','Salt, pepper, parsley'],
+   instructions:['Cook fettuccine; reserve 1/2 cup pasta water.','Season and cook chicken in butter; remove.','In same pan, sauté garlic 1 min. Add cream; simmer 3 min.','Stir in Parmesan until melted. Thin with pasta water if needed.','Toss in pasta and chicken. Garnish with parsley.']},
+
+  // GRILLING
+  {id:uid(),cat:'grilling',name:'Classic Backyard Burgers',time:'25 min',
+   ingredients:['2.5 lbs 80/20 ground beef','5 burger buns','Salt & pepper','5 slices cheddar cheese','Lettuce, tomato, onion','Ketchup, mustard, mayo','1 tbsp Worcestershire sauce'],
+   instructions:['Mix beef with Worcestershire, salt, pepper. Form 5 patties 1 inch thick.','Make a small indent in each center.','Grill on high 4 min per side for medium.','Add cheese in last minute; tent to melt.','Toast buns on grill. Serve with toppings.']},
+  {id:uid(),cat:'grilling',name:'BBQ Chicken Thighs',time:'45 min',
+   ingredients:['10 bone-in chicken thighs','1.5 cups BBQ sauce','2 tbsp olive oil','1 tsp garlic powder','1 tsp smoked paprika','1 tsp onion powder','Salt & pepper'],
+   instructions:['Mix olive oil and spices; rub over chicken.','Grill on medium heat, bone-side up, 20 min.','Flip; brush with BBQ sauce. Grill 15 more min, basting every 5 min.','Chicken is done at 165°F internal temp.','Let rest 5 min before serving.']},
+
+  // ── BLACKSTONE GRIDDLE ──
+  {id:uid(),cat:'griddle',name:'Blackstone Hibachi Chicken & Fried Rice',time:'40 min',
+   ingredients:['2 lbs chicken breast, cubed','4 cups cooked white rice (day-old is best)','4 eggs','1 cup frozen peas & carrots','1 onion, diced','4 cloves garlic, minced','1 tbsp fresh ginger, grated','4 tbsp soy sauce','2 tbsp sesame oil','2 tbsp butter','2 tbsp vegetable oil','2 tbsp hibachi or teriyaki sauce','Salt & pepper','Yum Yum sauce for serving','Green onions for garnish'],
+   instructions:['Preheat Blackstone to high on one side, medium-low on the other.','Oil the hot side; add chicken. Cook 6–8 min until golden. Add garlic, ginger, and hibachi sauce; toss. Move chicken to cool side.','Add butter to hot zone. Add onion and peas & carrots; stir-fry 3 min.','Push veggies aside. Crack eggs in the center; scramble until just set; fold into veggies.','Add rice to the hot zone; press flat and let it crisp without moving, 2 min. Drizzle with soy sauce and sesame oil; toss and fold everything together.','Combine rice with chicken. Garnish with green onions. Serve with yum yum sauce.']},
+  {id:uid(),cat:'griddle',name:'Blackstone Smash Burgers',time:'20 min',
+   ingredients:['2.5 lbs 80/20 ground beef','10 slices American cheese','5 brioche burger buns','1 onion, finely minced','Salt & pepper','Smash sauce: 1/2 cup mayo, 2 tbsp ketchup, 1 tbsp mustard, 1 tbsp sweet relish, pinch of garlic powder','Shredded lettuce, pickles, tomato'],
+   instructions:['Mix smash sauce; refrigerate until serving.','Preheat Blackstone to high. Lightly oil surface.','Form beef into 10 loose 4-oz balls (two patties per burger).','Place balls on griddle; immediately smash flat with a heavy spatula. Season with salt and pepper.','Cook 2–3 min until edges are crispy and deeply browned. Flip; add cheese to each patty. Cook 1 more min.','Stack two cheesy patties per toasted bun. Load with smash sauce, lettuce, pickles, and tomato.']},
+  {id:uid(),cat:'griddle',name:'Blackstone Philly Cheesesteaks',time:'30 min',
+   ingredients:['2 lbs ribeye steak, thinly sliced (freeze 30 min to slice easily)','2 green bell peppers, sliced','2 onions, sliced','2 cups mushrooms, sliced','10 slices provolone cheese','5 hoagie rolls','3 tbsp butter','2 tbsp Worcestershire sauce','Garlic powder, salt, pepper'],
+   instructions:['Preheat Blackstone to medium-high.','Melt butter; add onions, peppers, and mushrooms. Cook 8–10 min until soft and caramelized.','Push veggies to one side. Add steak to empty zone; season with Worcestershire, garlic powder, salt, and pepper. Chop and stir as it cooks, about 4 min.','Combine steak with veggies. Lay provolone slices over the top; let melt 1 min.','Scoop into hoagie rolls and serve immediately.']},
+  {id:uid(),cat:'griddle',name:'Griddle Fajita Night',time:'25 min',
+   ingredients:['2 lbs chicken breast or skirt steak, sliced','3 bell peppers (mixed colors), sliced','2 onions, sliced','3 tbsp olive oil','Fajita seasoning: 2 tsp cumin, 2 tsp chili powder, 1 tsp smoked paprika, 1 tsp garlic powder, salt','10 flour tortillas','Sour cream, guacamole, salsa, shredded cheese, lime wedges'],
+   instructions:['Toss protein and veggies with olive oil and fajita seasoning (separately).','Preheat Blackstone to high. Cook protein 5–7 min, stirring, until cooked through.','Move protein to cooler side. Cook peppers and onions on hot side 5 min until charred at edges.','Combine protein and veggies; squeeze lime juice over everything.','Warm tortillas on the griddle 30 seconds per side.','Serve fajita-bar style with all toppings!']},
+  {id:uid(),cat:'griddle',name:'Blackstone Breakfast Scramble',time:'25 min',
+   ingredients:['10 eggs','1 lb breakfast sausage','1 bag (20 oz) frozen diced hash browns','1 bell pepper, diced','1 onion, diced','2 cups shredded cheddar','3 tbsp butter','Salt, pepper, garlic powder','Hot sauce for serving'],
+   instructions:['Preheat Blackstone to medium. Add hash browns with butter; press flat. Cook 8 min without moving until crispy underneath.','On an adjacent zone, cook sausage, breaking into crumbles. Add pepper and onion; cook 4 min.','Flip hash browns; season with salt, pepper, and garlic powder.','Beat eggs, season, and pour onto griddle next to sausage. Stir gently as they scramble.','Combine everything; top with shredded cheese. Cover briefly with a dome lid or foil to melt.','Serve straight off the griddle with hot sauce.']},
+
+  // SOUPS
+  {id:uid(),cat:'soups',name:'Slow Cooker Chicken Tortilla Soup',time:'6–8 hrs',
+   ingredients:['2 lbs chicken breast','2 cans black beans, drained','1 can corn, drained','1 can Rotel tomatoes','1 can diced tomatoes','32 oz chicken broth','1 packet taco seasoning','1 tsp cumin','Toppings: tortilla strips, cheese, avocado, sour cream, lime'],
+   instructions:['Add all ingredients (except toppings) to slow cooker.','Cook on low 6–8 hrs or high 3–4 hrs.','Shred chicken with two forks right in the pot.','Stir to combine.','Ladle into bowls and pile on all the toppings.']},
+  {id:uid(),cat:'soups',name:'Hearty Beef Vegetable Soup',time:'1 hr 15 min',
+   ingredients:['1.5 lbs beef stew meat, cubed','4 carrots, sliced','4 potatoes, cubed','3 stalks celery, sliced','1 onion, diced','2 cans diced tomatoes','32 oz beef broth','2 cups frozen green beans','2 tsp Worcestershire','1 tsp thyme, salt, pepper'],
+   instructions:['Brown beef in large pot over high heat; remove.','Sauté onion and celery 3 min. Return beef.','Add broth, tomatoes, carrots, potatoes, Worcestershire, and thyme.','Bring to boil; reduce heat. Simmer 45 min until beef is tender.','Add green beans; cook 10 more min. Season to taste.']},
+
+  // BREAKFAST FOR DINNER
+  {id:uid(),cat:'breakfast',name:'Fluffy Pancakes & Scrambled Eggs',time:'30 min',
+   ingredients:['3 cups pancake mix','2 cups milk','2 eggs','3 tbsp melted butter','10 eggs (for scrambling)','1/2 cup milk','3 tbsp butter','Maple syrup, fresh berries','Powdered sugar'],
+   instructions:['Mix pancake mix, milk, 2 eggs, and butter until just combined (lumps OK).','Cook pancakes on medium griddle, flipping when bubbles form.','Whisk 10 eggs with milk, salt, and pepper.','Scramble in buttered pan over medium-low heat, stirring gently.','Serve pancakes and eggs together with syrup and berries.']},
+  {id:uid(),cat:'breakfast',name:'Loaded Breakfast Burritos',time:'35 min',
+   ingredients:['10 large eggs','1 lb breakfast sausage','1 bell pepper, diced','1 onion, diced','2 cups shredded cheddar','5 large flour tortillas','1 can diced green chiles','Salsa and hot sauce'],
+   instructions:['Cook sausage; drain fat. Add bell pepper and onion; cook 4 min.','Whisk eggs with salt and pepper; scramble into pan with sausage mixture.','Remove from heat; fold in green chiles.','Warm tortillas in microwave.','Fill each tortilla with egg mixture and cheese; roll tightly.','Serve with salsa.']},
+
+  // FAMILY FAVORITES
+  {id:uid(),cat:'custom',name:'Homemade Mac & Cheese',time:'40 min',
+   ingredients:['1 lb elbow macaroni','4 tbsp butter','1/4 cup flour','3 cups whole milk','1 cup heavy cream','3 cups shredded sharp cheddar','1 cup Gruyère, shredded','1 tsp mustard powder','1/2 tsp cayenne','Breadcrumbs for topping'],
+   instructions:['Cook pasta; drain.','Melt butter in large pot; whisk in flour; cook 2 min.','Slowly whisk in milk and cream; bring to simmer until thickened, about 5 min.','Remove from heat; stir in cheeses, mustard powder, and cayenne.','Fold in pasta. Transfer to baking dish; top with breadcrumbs.','Bake at 375°F for 20 min until golden.']},
+  {id:uid(),cat:'custom',name:'Pizza Night (Homemade Dough)',time:'1 hr + rest',
+   ingredients:['3 cups bread flour','1 packet instant yeast','1 tsp salt','1 tsp sugar','1 cup warm water','2 tbsp olive oil','Pizza sauce, shredded mozzarella','Toppings of choice'],
+   instructions:['Mix flour, yeast, salt, and sugar. Add water and oil; knead 8 min until smooth.','Cover and let rise 30–60 min.','Divide dough into portions; stretch onto oiled pans.','Add sauce, cheese, and toppings.','Bake at 500°F (or as high as oven goes) for 10–12 min.','Let each kid customize their own section!']},
+];
+
+let recipes = JSON.parse(localStorage.getItem('familyRecipes_v3') || 'null') || DEFAULT_RECIPES;
+function save(){ localStorage.setItem('familyRecipes_v3', JSON.stringify(recipes)); }
+
+function render(){
+  const container = document.getElementById('categories');
+  container.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const catRecipes = recipes.filter(r => r.cat === cat.id);
+    const div = document.createElement('div');
+    div.className = `category ${cat.cls}`;
+    div.id = `cat-${cat.id}`;
+    div.innerHTML = `
+      <div class="cat-header" onclick="toggleCat('${cat.id}')">
+        <span class="cat-title"><span class="cat-icon">${cat.icon}</span>${cat.label}</span>
+        <span style="display:flex;align-items:center;gap:0.6rem">
+          <span class="cat-count">${catRecipes.length} recipe${catRecipes.length!==1?'s':''}</span>
+          <span class="cat-chevron">▼</span>
+        </span>
+      </div>
+      <div class="cat-body">
+        ${catRecipes.length===0 ? '<p class="empty-cat">No recipes yet — add one above!</p>' :
+          catRecipes.map(r => recipeHTML(r)).join('')}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function recipeHTML(r){
+  const ingList  = r.ingredients.map(i=>`<li>${i}</li>`).join('');
+  const stepList = r.instructions.map(s=>`<li>${s}</li>`).join('');
+  return `
+    <div class="recipe-item" id="recipe-${r.id}">
+      <div class="recipe-header" onclick="toggleRecipe('${r.id}')">
+        <div>
+          <div class="recipe-name">${r.name}</div>
+          <div class="recipe-meta">${r.time?'⏱ '+r.time:''} <span class="servings-badge">Serves 5</span></div>
+        </div>
+        <div class="recipe-actions">
+          <button class="btn-delete" onclick="deleteRecipe(event,'${r.id}')" title="Remove recipe">🗑️</button>
+          <span class="recipe-chevron">▼</span>
+        </div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-section-title">🛒 Ingredients</div>
+        <ul class="ingredients-list">${ingList}</ul>
+        <div class="recipe-section-title">👩‍🍳 Instructions</div>
+        <ol class="instructions-list">${stepList}</ol>
+      </div>
+    </div>`;
+}
+
+function toggleCat(id){ document.getElementById(`cat-${id}`).classList.toggle('open'); }
+function toggleRecipe(id){ document.getElementById(`recipe-${id}`).classList.toggle('open'); }
+
+function deleteRecipe(e,id){
+  e.stopPropagation();
+  if(!confirm('Remove this recipe?')) return;
+  recipes = recipes.filter(r => r.id!==id);
+  save(); render();
+  toast('Recipe removed.');
+}
+
+function addRecipe(){
+  const name    = document.getElementById('new-name').value.trim();
+  const cat     = document.getElementById('new-cat').value;
+  const ingRaw  = document.getElementById('new-ingredients').value.trim();
+  const instrRaw= document.getElementById('new-instructions').value.trim();
+  if(!name)     { toast('Please enter a recipe name.'); return; }
+  if(!ingRaw)   { toast('Please enter at least one ingredient.'); return; }
+  if(!instrRaw) { toast('Please enter at least one instruction.'); return; }
+  const recipe = {
+    id: uid(), cat, name, time:'',
+    ingredients:  ingRaw.split('\n').map(s=>s.trim()).filter(Boolean),
+    instructions: instrRaw.split('\n').map(s=>s.trim()).filter(Boolean),
+  };
+  recipes.push(recipe);
+  save(); render();
+  const catEl = document.getElementById(`cat-${cat}`);
+  if(!catEl.classList.contains('open')) catEl.classList.add('open');
+  setTimeout(()=>{
+    const el = document.getElementById(`recipe-${recipe.id}`);
+    if(el){ el.classList.add('open'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+  },100);
+  document.getElementById('new-name').value='';
+  document.getElementById('new-ingredients').value='';
+  document.getElementById('new-instructions').value='';
+  toast('🍽️ Recipe added!');
+}
+
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+render();
+</script>
+</body>
+</html>
